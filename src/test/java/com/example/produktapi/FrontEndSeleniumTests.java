@@ -15,6 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.time.Duration;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -31,10 +32,14 @@ public class FrontEndSeleniumTests {
         options.addArguments("--disable-dev-shm-usage");
         options.addArguments("--headless");
         webDriver = new ChromeDriver(options);
+
+
+
     }
     @BeforeEach
     void getURL(){
         webDriver.get("https://java22.netlify.app/");
+        webDriver.manage().timeouts().implicitlyWait(120, TimeUnit.MILLISECONDS);
     }
     @AfterAll
     public static void close(){
