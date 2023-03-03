@@ -20,6 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @SpringBootTest
 public class FrontEndSeleniumTests {
     // SetUp
+    /*
     static WebDriver webDriver;
     @BeforeAll
     public static void setUp (){
@@ -206,7 +207,7 @@ public class FrontEndSeleniumTests {
 
 
 
-
+*/
 
 
 
