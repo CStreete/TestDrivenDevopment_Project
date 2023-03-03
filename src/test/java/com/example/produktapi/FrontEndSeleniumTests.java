@@ -27,17 +27,16 @@ public class FrontEndSeleniumTests {
     static WebDriver webDriver;
     @BeforeAll
     public static void setUp (){
-        ChromeOptions options = new ChromeOptions();
-        options.addArguments("--no-sandbox");
-        options.addArguments("--disable-dev-shm-usage");
-        options.addArguments("--headless");
-        webDriver = new ChromeDriver(options);
-
 
 
     }
     @BeforeEach
     void getURL(){
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments("--no-sandbox");
+        options.addArguments("--disable-dev-shm-usage");
+        options.addArguments("--headless");
+        webDriver = new ChromeDriver(options);
         webDriver.get("https://java22.netlify.app/");
         webDriver.manage().timeouts().implicitlyWait(120, TimeUnit.MILLISECONDS);
     }
