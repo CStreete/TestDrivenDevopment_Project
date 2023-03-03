@@ -1,17 +1,19 @@
 package com.example.produktapi;
 
-import org.aspectj.lang.annotation.After;
+
 import org.junit.jupiter.api.*;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import javax.naming.ldap.Control;
+
 import java.time.Duration;
+
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -20,11 +22,15 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @SpringBootTest
 public class FrontEndSeleniumTests {
     // SetUp
-    /*
+
     static WebDriver webDriver;
     @BeforeAll
     public static void setUp (){
-        webDriver = new ChromeDriver();
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments("--no-sandbox");
+        options.addArguments("--disable-dev-shm-usage");
+        options.addArguments("--headless");
+        webDriver = new ChromeDriver(options);
     }
     @BeforeEach
     void getURL(){
@@ -98,6 +104,7 @@ public class FrontEndSeleniumTests {
     void ControlOfFjallravenFoldsackNo1BackpackFits15LaptopsPrice(){
         String pElement = webDriver.findElement(By.xpath("//*[@id=\"productsContainer\"]/div/div[1]/div/div/p")).getText();
         assertTrue(pElement.contains("109.95"), "Displayed price is incorrect");
+
     }
     @Test
     void ControlOfMensCasualPremiumSlimFitTShirtsPrice(){
@@ -207,7 +214,7 @@ public class FrontEndSeleniumTests {
 
 
 
-*/
+
 
 
 
