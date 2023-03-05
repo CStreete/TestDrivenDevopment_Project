@@ -46,7 +46,7 @@ class ProductRepositoryTests {
     }
     // Find By Category Tests
     @Test
-    void whenSearchingForExistingCategory_thenReturnProducts(){
+    void whenSearchingForExistingCategory_thenReturnProductsInCategory(){
         //given
         String existingCategory = "electronics";
         //when
@@ -57,7 +57,6 @@ class ProductRepositoryTests {
                 // Maybe Add more
         );
     }
-
     @Test
     void whenSearchingForNonExistingCategory_thenReturnEmptyList(){
         //given
@@ -82,7 +81,6 @@ class ProductRepositoryTests {
                 ()->assertFalse(categoriesList.isEmpty()),
                 ()->assertEquals(4, categoriesList.size())
         );
-
     }
 
 
