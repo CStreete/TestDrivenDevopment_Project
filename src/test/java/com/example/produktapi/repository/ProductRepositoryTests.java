@@ -1,4 +1,4 @@
-package com.example.produktapi;
+package com.example.produktapi.repository;
 
 
 import com.example.produktapi.model.Product;

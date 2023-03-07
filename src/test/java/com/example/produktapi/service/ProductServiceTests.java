@@ -1,4 +1,4 @@
-package com.example.produktapi;
+package com.example.produktapi.service;
 
 import com.example.produktapi.exception.BadRequestException;
 import com.example.produktapi.exception.EntityNotFoundException;

@@ -17,6 +17,7 @@ target/
 **/src/test/java/com/example/produktapi/SeleniumTests.java
 
 
+
 ### IntelliJ IDEA ###
 .idea
 *.iws
