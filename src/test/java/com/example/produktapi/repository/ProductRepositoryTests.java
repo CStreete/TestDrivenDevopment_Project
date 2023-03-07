@@ -2,9 +2,9 @@ package com.example.produktapi.repository;
 
 
 import com.example.produktapi.model.Product;
-import com.example.produktapi.repository.ProductRepository;
 
-import org.junit.jupiter.api.BeforeEach;
+
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +21,6 @@ import static org.junit.jupiter.api.Assertions.*;
 class ProductRepositoryTests {
     @Autowired
     private ProductRepository underTest;
-
-
 
 
     // Find By Title Tests

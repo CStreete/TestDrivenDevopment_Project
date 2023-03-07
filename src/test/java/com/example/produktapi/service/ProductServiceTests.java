@@ -4,19 +4,13 @@ import com.example.produktapi.exception.BadRequestException;
 import com.example.produktapi.exception.EntityNotFoundException;
 import com.example.produktapi.model.Product;
 import com.example.produktapi.repository.ProductRepository;
-import com.example.produktapi.service.ProductService;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.context.SpringBootTest;
-
-import java.util.List;
 import java.util.Optional;
-
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.*;
 
@@ -76,10 +70,12 @@ public class ProductServiceTests {
         //given
         given(repository.findById(product.getId())).willReturn(Optional.of(product));
         //when
-        underTest.getProductById(product.getId());
+        Product product1 = underTest.getProductById(any());
         //then
         verify(repository,times(1)).findById(any());
         verifyNoMoreInteractions(repository);
+        assertEquals(product1,product);
+
     }
     @Test
     @DisplayName("Get product by id test wrong flow")
@@ -97,10 +93,12 @@ public class ProductServiceTests {
     @DisplayName("Add product test normal flow")
     void whenAddingAProduct_thenSaveMethodShouldBeCalled(){
         //given
+
         //when
         underTest.addProduct(product);
         //then
-        verify(repository).save(productCaptor.capture());
+        verify(repository,times(1)).findByTitle(product.getTitle());
+        verify(repository,times(1)).save(productCaptor.capture());
         assertEquals(product,productCaptor.getValue());
     }
     @Test
@@ -127,8 +125,8 @@ public class ProductServiceTests {
         //when
         underTest.updateProduct(product,product.getId());
         // then
-        verify(repository,times(1)).save(productCaptor.capture());
         verify(repository,times(1)).findById(product.getId());
+        verify(repository,times(1)).save(productCaptor.capture());
         assertEquals(product, productCaptor.getValue());
         verifyNoMoreInteractions(repository);
     }
@@ -155,6 +153,7 @@ public class ProductServiceTests {
         //when
         underTest.deleteProduct(product.getId());
         //then
+        verify(repository,times(1)).findById(idCaptor.capture());
         verify(repository,times(1)).deleteById(idCaptor.capture());
         assertEquals(product.getId(),idCaptor.getValue());
         verifyNoMoreInteractions(repository);
