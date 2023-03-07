@@ -6,6 +6,8 @@ import com.example.produktapi.model.Product;
 import com.example.produktapi.repository.ProductRepository;
 import com.example.produktapi.service.ProductService;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
@@ -30,7 +32,13 @@ public class ProductServiceTests {
     @Captor
     ArgumentCaptor<Integer> idCaptor;
 
+    Product product;
+    @BeforeEach
+    void setUp(){
+         product = new Product("A Test Product",300.00,"","","");
+    }
     @Test
+    @DisplayName("Get all products test")
     void givenGetAllProducts_thenOneInteractionWithRepositoryMethodFindAll(){
         // when
         underTest.getAllProducts();
@@ -38,6 +46,7 @@ public class ProductServiceTests {
         verify(repository, times(1)).findAll();
     }
     @Test
+    @DisplayName("Get all categories test normal flow")
     void givenGetAllCategories_thenOneInteractionWithRepositoryMethodFindAllCategories(){
         //when
         underTest.getAllCategories();
@@ -46,6 +55,7 @@ public class ProductServiceTests {
         verifyNoMoreInteractions(repository);
     }
     @Test
+    @DisplayName("Get products by category test normal flow")
     void givenExistingCategory_whenGetProductsByCategory_thenFindByCategoryShouldBeCalled(){
         //given
         String category = "electronics";
@@ -55,40 +65,64 @@ public class ProductServiceTests {
         verify(repository, times(1)).findByCategory(category);
         verifyNoMoreInteractions(repository);
     }
-
-
     @Test
+    @DisplayName("Get products by category test wrong flow")
+    void givenNonExistingCategory_whenGetProductsByCategory_thenExceptionShouldBeThrown(){
+        //No exception logic in method
+    }
+    @Test
+    @DisplayName("Get product by id test normal flow")
+    void givenExistingProduct_whenGetProductsByID_thenReturnOptionalProduct(){
+        //given
+        given(repository.findById(product.getId())).willReturn(Optional.of(product));
+        //when
+        underTest.getProductById(product.getId());
+        //then
+        verify(repository,times(1)).findById(any());
+        verifyNoMoreInteractions(repository);
+    }
+    @Test
+    @DisplayName("Get product by id test wrong flow")
+    void whenGetProductsByIncorrectID_thenThrowException(){
+        //given
+        given(repository.findById(product.getId())).willReturn(Optional.empty());
+
+        EntityNotFoundException exception = assertThrowsExactly(EntityNotFoundException.class,
+                //when
+                ()->underTest.getProductById(product.getId()));
+        //then
+        assertEquals("Produkt med id " + product.getId() + " hittades inte", exception.getMessage());
+    }
+    @Test
+    @DisplayName("Add product test normal flow")
     void whenAddingAProduct_thenSaveMethodShouldBeCalled(){
         //given
-        String title = "Barbie";
-        Product product = new Product(title,899.99,"","","");
         //when
         underTest.addProduct(product);
         //then
         verify(repository).save(productCaptor.capture());
         assertEquals(product,productCaptor.getValue());
     }
-
     @Test
-    void whenAddingExistingProduct_thenThrowError(){
-        String title = "banana";
-        Product product = new Product(title, 10.99,"","","");
+    @DisplayName("Add products test wrong flow")
+    void whenAddingExistingProductWithSameTitle_thenThrowException(){
+        String title = product.getTitle();
         //given
         given(repository.findByTitle(title)).willReturn(Optional.of(product));
         //then
-      assertThrowsExactly(BadRequestException.class,
+        BadRequestException exception = assertThrowsExactly(BadRequestException.class,
                 //when
                 ()-> underTest.addProduct(product));
         verify(repository, times(1)).findByTitle(title);
         verify(repository, never()).save(any());
         verifyNoMoreInteractions(repository);
-    }
+        assertEquals("En produkt med titeln: " + title + " finns redan",exception.getMessage());
 
+    }
     @Test
+    @DisplayName("Update product test normal flow")
     void whenUpdatingExistingProductByID_thenSaveMethodShouldBeCalled(){
         //given
-        String title = "A Updated Product";
-        Product product = new Product(title,200.00,"","","");
         given(repository.findById(product.getId())).willReturn(Optional.of(product));
         //when
         underTest.updateProduct(product,product.getId());
@@ -98,25 +132,25 @@ public class ProductServiceTests {
         assertEquals(product, productCaptor.getValue());
         verifyNoMoreInteractions(repository);
     }
-
     @Test
+    @DisplayName("Update product test wrong flow")
     void whenUpdatingExistingProductsWithInvalidId_thenExceptionShouldBeThrown(){
         // given
-        String title = "A Updated Product";
-        Product product = new Product(title,200.00,"","","");
         given(repository.findById(product.getId())).willReturn(Optional.empty());
         //when
-        assertThrowsExactly(EntityNotFoundException.class,
+
+        EntityNotFoundException exception = assertThrowsExactly(EntityNotFoundException.class,
         //then
         ()-> underTest.updateProduct(product,product.getId()));
         verify(repository,times(1)).findById(product.getId());
         verify(repository,times(0)).save(any());
         verifyNoMoreInteractions(repository);
+        assertEquals("Produkt med id "+ product.getId()+ " hittades inte", exception.getMessage());
     }
     @Test
+    @DisplayName("Deleting product test normal flow")
     void whenDeletingExistingProductByID_thenDeleteMethodShouldBeCalled(){
         //given
-        Product product = new Product("A Product that need to be deleted",300.00,"","","");
         given(repository.findById(product.getId())).willReturn(Optional.of(product));
         //when
         underTest.deleteProduct(product.getId());
@@ -126,16 +160,17 @@ public class ProductServiceTests {
         verifyNoMoreInteractions(repository);
     }
     @Test
+    @DisplayName("Deleting product test wrong flow")
     void whenDeletingNonExistingProductByID_thenExceptionShouldBeThrown(){
         // given
-        Product product = new Product("A Product that need to be deleted",300.00,"","","");
         given(repository.findById(product.getId())).willReturn(Optional.empty());
         //when
-        assertThrowsExactly(EntityNotFoundException.class,
+        EntityNotFoundException exception = assertThrowsExactly(EntityNotFoundException.class,
                 ()-> underTest.deleteProduct(product.getId()));
         verify(repository,times(1)).findById(product.getId());
         verify(repository,times(0)).deleteById(product.getId());
         verifyNoMoreInteractions(repository);
+        assertEquals("Produkt med id "+ product.getId()+ " hittades inte",exception.getMessage());
     }
 
 
